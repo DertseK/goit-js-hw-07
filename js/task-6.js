@@ -3,25 +3,37 @@ function getRandomHexColor() {
     .toString(16)
     .padStart(6, 0)}`;
 }
-const [inputEl, btnCrtEl, btnDstrEl] = document.querySelector('#controls').children;
-const boxesEl = document.querySelector('#boxes');
-const createBoxes = amount => {
-  boxesEl.classList.remove('visually-hidden');
-  const res = [];
-  for (let i = 1; i <= amount; i++) {
-    res.push(
-      ` <div style="width:${20 + 10 * i}px; height:${20 + 10 * i}px; background-color:${getRandomHexColor()}"></div>`
-    );
+const fieldEl = document.querySelector(`.number`);
+const createBtn = document.querySelector(`.cr-button`);
+const destroyBtn = document.querySelector(`.dl-button`);
+const boxesContainer = document.querySelector('.p-boxes');
+function createBoxes(amount) {
+  boxesContainer.innerHTML = '';
+  const boxes = [];
+  for (let i = 0; i < amount; i++) {
+    const box = document.createElement('div');
+    const size = 30 + i * 10;
+    box.style.width = `${size}px`;
+    box.style.height = `${size}px`;
+    box.style.backgroundColor = getRandomHexColor();
+    box.style.margin = '5px';
+    boxes.push(box);
   }
-  return res.join('');
-};
-btnCrtEl.addEventListener('click', () => {
-  // Оскільки можна з клавіатури ввести відʼємні значеня та 0, то рендеремо по перевірці
-  inputEl.value > 0 && (boxesEl.innerHTML = createBoxes(inputEl.value));
-  inputEl.value = '';
+  boxesContainer.append(...boxes);
+}
+function destroyBoxes() {
+  boxesContainer.innerHTML = '';
+}
+createBtn.addEventListener('click', () => {
+  const amount = parseInt(fieldEl.value.trim(), 10);
+  if (amount >= 1 && amount <= 100) {
+    createBoxes(amount);
+    fieldEl.value = '';
+  } else {
+    alert('Please enter a number between 1 and 100');
+  }
 });
-btnDstrEl.addEventListener('click', () => {
-  inputEl.value = '';
-  boxesEl.innerHTML = '';
-  boxesEl.classList.add('visually-hidden');
+destroyBtn.addEventListener('click', () => {
+  destroyBoxes();
+  fieldEl.value = '';
 });
